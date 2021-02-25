@@ -7,6 +7,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
+import '../todos/services/database_service.dart';
 import 'navigation.dart';
 import '../todos/stores/todo_list_store.dart';
 
@@ -19,9 +20,10 @@ GetIt $initGetIt(
   EnvironmentFilter environmentFilter,
 }) {
   final gh = GetItHelper(get, environment, environmentFilter);
-  gh.lazySingleton<TodoListStore>(() => TodoListStore());
+  gh.lazySingleton<TodoList>(() => TodoList());
 
   // Eager singletons must be registered in the right order
+  gh.singleton<DatabaseService>(DatabaseService());
   gh.singleton<NavigationService>(NavigationService());
   return get;
 }

@@ -30,7 +30,9 @@ dependencies:
   path: ^1.7.0  # path util
   uuid: ^2.2.2
   equatable: ^1.2.6  # equality
+  intl: ^0.16.1
   logger: ^0.9.4
+  json_serializable: ^3.5.1
 #  flutter_hooks: ^0.15.0
   # State management
   provider: ^4.3.3
@@ -55,6 +57,7 @@ dependencies:
   pull_to_refresh: ^1.6.4  # scroll component drop-down refresh and pull up load
   responsive_builder: ^0.3.0
   # Components
+  flutter_datetime_picker: ^1.5.0
   convex_bottom_bar: ^2.6.0  # bottom tab with  n animation
   curved_navigation_bar: ^0.3.7  # curved navigation bar.
   flutter_slidable: ^0.5.7  # slidable card widget like an email app
@@ -74,7 +77,6 @@ dev_dependencies:
   build_runner: ^1.11.1
   injectable_generator: ^1.0.7
   mobx_codegen: ^1.1.2
-  json_serializable: ^3.5.1
   json_annotation: ^3.1.1
   pedantic: ^1.9.2  # lint and etc
 

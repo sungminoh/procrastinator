@@ -1,34 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
+import 'package:my_app/common/locator.dart';
 import 'package:my_app/common/utils.dart';
+import 'package:my_app/todos/services/database_service.dart';
 import 'package:my_app/todos/stores/todo_store.dart';
 
 
 part 'todo_list_store.g.dart';
 
 @lazySingleton
-class TodoListStore = _TodoListStore with _$TodoListStore;
+class TodoList = _TodoList with _$TodoList;
 
 
-abstract class _TodoListStore with Store {
+abstract class _TodoList with Store {
+  _TodoList() {
+    logger.d('TodoList is initialized');
+    load();
+  }
+
+  Future load() async {
+    logger.d('TodoList loads todos');
+    this.todos = ObservableList.of(await getIt<DatabaseService>().getTodos());
+  }
+
   @observable
-  ObservableList<TodoStore> todos = ObservableList<TodoStore>();
+  ObservableList<Todo> todos = ObservableList<Todo>();
 
   @action
-  void remove(TodoStore todo) {
-    todos.removeWhere((element) => element.id == todo.id);
+  void remove(Todo todo) {
+    getIt<DatabaseService>().removeTodo(todo);
+    load();
   }
 
   @action
-  void add(TodoStore todo) {
+  void update(Todo todo) {
     if (this.todos.where((element) => element.id == todo.id).isEmpty) {
-      this.todos.add(todo);
+      getIt<DatabaseService>().addTodo(todo);
+    } else {
+      getIt<DatabaseService>().updateTodo(todo);
     }
+    load();
   }
 
   void dispose() {
-    logger.i("todo list is disposed");
+    logger.d("todo list is disposed");
     // TODO
   }
 }

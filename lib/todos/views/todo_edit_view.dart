@@ -14,11 +14,11 @@ import 'package:my_app/todos/stores/todo_store.dart';
  * @since 2/13/21.
  */
 class TodoEditView extends StatefulWidget {
-  final TodoStore todo;
+  final Todo todo;
 
-  TodoEditView({
-    TodoStore todo,
-  }): this.todo = todo ?? TodoStore();
+  TodoEditView([
+    Todo todo,
+  ]): this.todo = todo ?? Todo();
 
   @override
   _TodoEditViewState createState() => _TodoEditViewState();
@@ -34,7 +34,7 @@ class _TodoEditViewState extends State<TodoEditView> {
 
   @override
   Widget build(BuildContext context) {
-    // final todos = Provider.of<TodoListStore>(context).todos;
+    // final todos = Provider.of<TodoList>(context).todos;
     return Scaffold(
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -47,22 +47,13 @@ class _TodoEditViewState extends State<TodoEditView> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: TextFormField(
-                    style: Theme.of(context).textTheme.headline,
-                    initialValue: widget.todo.title,
-                    decoration: InputDecoration(
-                      hintText: Constants.TODO_TITLE_PLACEHOLDER,
-                    ),
-                    onSaved: (value) => widget.todo.title = value,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: TextFormField(
-                    initialValue: widget.todo.note,
+                    initialValue: widget.todo.content,
                     decoration: InputDecoration(
                       hintText: Constants.TODO_NOTE_PLACEHOLDER,
                     ),
-                    onSaved: (value) => widget.todo.note = value,
+                    onSaved: (value) {
+                      return widget.todo.content = value;
+                    },
                   ),
                 ),
               ],
@@ -72,8 +63,8 @@ class _TodoEditViewState extends State<TodoEditView> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          FloatingActionButton(
-            tooltip: Constants.RESCHEDULE_TODO_BUTTON_TOOLTIP,
+          MaterialButton(
+            // tooltip: Constants.RESCHEDULE_TODO_BUTTON_TOOLTIP,
             onPressed: () {
               showFloatingModalBottomSheet(
                 context: context,
@@ -91,11 +82,11 @@ class _TodoEditViewState extends State<TodoEditView> {
             },
             child: const Icon(Icons.watch_later),
           ),
-          FloatingActionButton(
-            tooltip: Constants.SAVE_TODO_BUTTON_TOOLTIP,
+          MaterialButton(
+            // : Constants.SAVE_TODO_BUTTON_TOOLTIP,
             onPressed: () {
               _formKey.currentState.save();
-              getIt<TodoListStore>().add(widget.todo);
+              getIt<TodoList>().update(widget.todo);
               Navigator.pop(context);
             },
             child: const Icon(Icons.save),

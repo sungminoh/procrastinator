@@ -22,11 +22,11 @@ class TodoListView extends StatefulWidget {
 
 class _TodoListView extends State<TodoListView> {
 
-  void moveToEditView([TodoStore todo]) {
+  void moveToEditView([Todo todo]) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => TodoEditView(todo: todo),
+          builder: (context) => TodoEditView(todo),
         )
     ).then((value) => setState(() {}));
   }
@@ -36,15 +36,15 @@ class _TodoListView extends State<TodoListView> {
     return Scaffold(
       body: Observer(
         builder: (context) {
-          TodoListStore todoList = getIt<TodoListStore>();
+          TodoList todoList = getIt<TodoList>();
           return ListView.builder(
               itemCount: todoList.todos.length,
               itemBuilder: (context, index) {
-                final TodoStore todo = todoList.todos[index];
+                final Todo todo = todoList.todos[index];
                 return Swipeable(
                     child: Container(
                         child: ListTile(
-                          title: Text(todo.title ?? ""),
+                          title: Text(todo.content ?? ""),
                           onTap: () => moveToEditView(todo),
                         ),
                         decoration: new BoxDecoration(

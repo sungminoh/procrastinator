@@ -3,73 +3,89 @@
 part of 'todo_store.dart';
 
 // **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Todo _$TodoFromJson(Map<String, dynamic> json) {
+  return Todo()
+    ..id = json['id'] as int
+    ..content = json['content'] as String
+    ..imagePath = json['imagePath'] as String
+    ..dateTime = json['dateTime'] == null
+        ? null
+        : DateTime.parse(json['dateTime'] as String)
+    ..timeZone = json['timeZone'] as String
+    ..interval = json['interval'] == null
+        ? null
+        : Duration(microseconds: json['interval'] as int)
+    ..snooze = json['snooze'] == null
+        ? null
+        : Duration(microseconds: json['snooze'] as int);
+}
+
+Map<String, dynamic> _$TodoToJson(Todo instance) => <String, dynamic>{
+      'id': instance.id,
+      'content': instance.content,
+      'imagePath': instance.imagePath,
+      'dateTime': instance.dateTime?.toIso8601String(),
+      'timeZone': instance.timeZone,
+      'interval': instance.interval?.inMicroseconds,
+      'snooze': instance.snooze?.inMicroseconds,
+    };
+
+// **************************************************************************
 // StoreGenerator
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$TodoStore on _TodoStore, Store {
-  final _$titleAtom = Atom(name: '_TodoStore.title');
+mixin _$Todo on _Todo, Store {
+  final _$contentAtom = Atom(name: '_Todo.content');
 
   @override
-  String get title {
-    _$titleAtom.reportRead();
-    return super.title;
+  String get content {
+    _$contentAtom.reportRead();
+    return super.content;
   }
 
   @override
-  set title(String value) {
-    _$titleAtom.reportWrite(value, super.title, () {
-      super.title = value;
+  set content(String value) {
+    _$contentAtom.reportWrite(value, super.content, () {
+      super.content = value;
     });
   }
 
-  final _$noteAtom = Atom(name: '_TodoStore.note');
+  final _$imagePathAtom = Atom(name: '_Todo.imagePath');
 
   @override
-  String get note {
-    _$noteAtom.reportRead();
-    return super.note;
+  String get imagePath {
+    _$imagePathAtom.reportRead();
+    return super.imagePath;
   }
 
   @override
-  set note(String value) {
-    _$noteAtom.reportWrite(value, super.note, () {
-      super.note = value;
+  set imagePath(String value) {
+    _$imagePathAtom.reportWrite(value, super.imagePath, () {
+      super.imagePath = value;
     });
   }
 
-  final _$completeAtom = Atom(name: '_TodoStore.complete');
+  final _$dateTimeAtom = Atom(name: '_Todo.dateTime');
 
   @override
-  bool get complete {
-    _$completeAtom.reportRead();
-    return super.complete;
+  DateTime get dateTime {
+    _$dateTimeAtom.reportRead();
+    return super.dateTime;
   }
 
   @override
-  set complete(bool value) {
-    _$completeAtom.reportWrite(value, super.complete, () {
-      super.complete = value;
+  set dateTime(DateTime value) {
+    _$dateTimeAtom.reportWrite(value, super.dateTime, () {
+      super.dateTime = value;
     });
   }
 
-  final _$datetimeAtom = Atom(name: '_TodoStore.datetime');
-
-  @override
-  DateTime get datetime {
-    _$datetimeAtom.reportRead();
-    return super.datetime;
-  }
-
-  @override
-  set datetime(DateTime value) {
-    _$datetimeAtom.reportWrite(value, super.datetime, () {
-      super.datetime = value;
-    });
-  }
-
-  final _$intervalAtom = Atom(name: '_TodoStore.interval');
+  final _$intervalAtom = Atom(name: '_Todo.interval');
 
   @override
   Duration get interval {
@@ -84,7 +100,7 @@ mixin _$TodoStore on _TodoStore, Store {
     });
   }
 
-  final _$snoozeAtom = Atom(name: '_TodoStore.snooze');
+  final _$snoozeAtom = Atom(name: '_Todo.snooze');
 
   @override
   Duration get snooze {
@@ -99,37 +115,25 @@ mixin _$TodoStore on _TodoStore, Store {
     });
   }
 
-  final _$_TodoStoreActionController = ActionController(name: '_TodoStore');
+  final _$_TodoActionController = ActionController(name: '_Todo');
 
   @override
   void markDone() {
     final _$actionInfo =
-        _$_TodoStoreActionController.startAction(name: '_TodoStore.markDone');
+        _$_TodoActionController.startAction(name: '_Todo.markDone');
     try {
       return super.markDone();
     } finally {
-      _$_TodoStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void postpone() {
-    final _$actionInfo =
-        _$_TodoStoreActionController.startAction(name: '_TodoStore.postpone');
-    try {
-      return super.postpone();
-    } finally {
-      _$_TodoStoreActionController.endAction(_$actionInfo);
+      _$_TodoActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   String toString() {
     return '''
-title: ${title},
-note: ${note},
-complete: ${complete},
-datetime: ${datetime},
+content: ${content},
+imagePath: ${imagePath},
+dateTime: ${dateTime},
 interval: ${interval},
 snooze: ${snooze}
     ''';

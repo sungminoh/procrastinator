@@ -7,6 +7,7 @@ import 'common/navigation.dart';
 import 'common/router.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
   runApp(MyApp());
 }
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         ),
         navigatorKey: getIt<NavigationService>().navigatorKey,
         onGenerateRoute: generateRoute,
-        initialRoute: Routes.ADD_TODO_ROUTE,
+        initialRoute: Routes.HOME_ROUTE,
       );
   }
 }
