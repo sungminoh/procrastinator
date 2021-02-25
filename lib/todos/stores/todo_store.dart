@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
 
@@ -24,6 +26,9 @@ abstract class _Todo with Store {
   @observable
   String imagePath;
 
+  @computed
+  File get image => File(imagePath);
+
   @observable
   DateTime dateTime;
 
@@ -39,6 +44,11 @@ abstract class _Todo with Store {
   void markDone(){
     // TODO
   }
+
+  @computed
+  bool get isEmpty =>
+      (content == null || content.isEmpty)
+      || (imagePath == null || imagePath.isEmpty);
 
   // static TodoStore fromJson(Map<String, dynamic> json) {
   //   return TodoStore(

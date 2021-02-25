@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 var logger = Logger(
   printer: PrettyPrinter(
@@ -45,4 +50,17 @@ String formatDateDiff(DateTime base, DateTime target) {
     text = '${months} months';
   }
   return diff.isNegative ? '$text ago' : 'in $text';
+}
+
+
+Future<File> getImage(ImageSource imageSource) async {
+  ImagePicker picker = new ImagePicker();
+  PickedFile imageFile = await picker.getImage(source: imageSource);
+  if (imageFile == null) {
+    return null;
+  }
+  File tmpFile = File(imageFile.path);
+  final appDir = await getApplicationDocumentsDirectory();
+  final fileName = basename(imageFile.path);
+  return tmpFile.copy('${appDir.path}/$fileName');
 }

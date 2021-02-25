@@ -40,6 +40,19 @@ Map<String, dynamic> _$TodoToJson(Todo instance) => <String, dynamic>{
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$Todo on _Todo, Store {
+  Computed<File> _$imageComputed;
+
+  @override
+  File get image => (_$imageComputed ??=
+          Computed<File>(() => super.image, name: '_Todo.image'))
+      .value;
+  Computed<bool> _$isEmptyComputed;
+
+  @override
+  bool get isEmpty => (_$isEmptyComputed ??=
+          Computed<bool>(() => super.isEmpty, name: '_Todo.isEmpty'))
+      .value;
+
   final _$contentAtom = Atom(name: '_Todo.content');
 
   @override
@@ -135,7 +148,9 @@ content: ${content},
 imagePath: ${imagePath},
 dateTime: ${dateTime},
 interval: ${interval},
-snooze: ${snooze}
+snooze: ${snooze},
+image: ${image},
+isEmpty: ${isEmpty}
     ''';
   }
 }
