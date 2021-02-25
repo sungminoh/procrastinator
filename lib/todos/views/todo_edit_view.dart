@@ -5,6 +5,7 @@ import 'package:my_app/common/compoments/floatting_modal.dart';
 import 'package:my_app/common/compoments/grid_buttons.dart';
 import 'package:my_app/common/constants.dart';
 import 'package:my_app/common/locator.dart';
+import 'package:my_app/todos/components/scheduler.dart';
 import 'package:my_app/todos/stores/todo_list_store.dart';
 import 'package:my_app/todos/stores/todo_store.dart';
 
@@ -70,13 +71,12 @@ class _TodoEditViewState extends State<TodoEditView> {
                 context: context,
                 builder: (context) => SizedBox(
                   height: 400,
-                    child: GridButtons(
-                      children: [
-                      [Icon(Icons.watch_later), Icon(Icons.watch_later), Icon(Icons.watch_later)],
-                      [Icon(Icons.watch_later), Icon(Icons.watch_later), Icon(Icons.watch_later)],
-                      [Icon(Icons.watch_later), Icon(Icons.watch_later), Icon(Icons.watch_later)],
-                      [Icon(Icons.watch_later), Icon(Icons.watch_later), Icon(Icons.watch_later)]
-                    ],)
+                  child: Scheduler(
+                      baseDateTime: widget.todo.dateTime,
+                      onDispose: (dateTime) {
+                        return widget.todo.dateTime = dateTime;
+                      },
+                  ),
                 ),
               );
             },
