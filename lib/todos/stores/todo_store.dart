@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
-import 'package:uuid/uuid.dart';
 
 part 'todo_store.g.dart';
 

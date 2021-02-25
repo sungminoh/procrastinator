@@ -1,8 +1,5 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_app/common/compoments/floatting_modal.dart';
-import 'package:my_app/common/compoments/grid_buttons.dart';
 import 'package:my_app/common/constants.dart';
 import 'package:my_app/common/locator.dart';
 import 'package:my_app/todos/components/scheduler.dart';
@@ -26,73 +23,77 @@ class TodoEditView extends StatefulWidget {
 }
 
 class _TodoEditViewState extends State<TodoEditView> {
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
+  final TextEditingController textController = TextEditingController();
 
   @override
   void dispose() {
+    if (widget.todo.content?.isNotEmpty || false) {
+      getIt<TodoList>().update(widget.todo);
+    }
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.todo.content != null) {
+      this.textController.value = TextEditingValue(
+          text: widget.todo.content
+      );
+    }
+    this.textController.addListener(() {
+      widget.todo.content = this.textController.text;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     // final todos = Provider.of<TodoList>(context).todos;
     return Scaffold(
-      body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Form(
-            key: _formKey,
+        body: SizedBox(
+            height: MediaQuery.of(context).size.height,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
                 SizedBox(height: 60),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: TextFormField(
-                    initialValue: widget.todo.content,
-                    decoration: InputDecoration(
+                  child: TextField(
+                    controller: textController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    autofocus: true,
+                    decoration: InputDecoration.collapsed(
                       hintText: Constants.TODO_NOTE_PLACEHOLDER,
                     ),
-                    onSaved: (value) {
-                      return widget.todo.content = value;
-                    },
+                    // onSaved: (value) => widget.todo.content = value
                   ),
                 ),
               ],
-            ),
-          )
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          MaterialButton(
-            // tooltip: Constants.RESCHEDULE_TODO_BUTTON_TOOLTIP,
-            onPressed: () {
-              showFloatingModalBottomSheet(
-                context: context,
-                builder: (context) => SizedBox(
-                  height: 400,
-                  child: Scheduler(
+            )
+        ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            MaterialButton(
+              // tooltip: Constants.RESCHEDULE_TODO_BUTTON_TOOLTIP,
+              onPressed: () {
+                showFloatingModalBottomSheet(
+                  context: context,
+                  builder: (context) => SizedBox(
+                    height: 400,
+                    child: Scheduler(
                       baseDateTime: widget.todo.dateTime,
-                      onDispose: (dateTime) {
-                        return widget.todo.dateTime = dateTime;
-                      },
+                      onDispose: (dateTime) => widget.todo.dateTime = dateTime,
+                    ),
                   ),
-                ),
-              );
-            },
-            child: const Icon(Icons.watch_later),
-          ),
-          MaterialButton(
-            // : Constants.SAVE_TODO_BUTTON_TOOLTIP,
-            onPressed: () {
-              _formKey.currentState.save();
-              getIt<TodoList>().update(widget.todo);
-              Navigator.pop(context);
-            },
-            child: const Icon(Icons.save),
-          ),
-        ],
-      )
+                );
+              },
+              child: const Icon(Icons.watch_later),
+            ),
+          ],
+        )
     );
   }
 }
