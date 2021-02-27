@@ -131,6 +131,17 @@ mixin _$Todo on _Todo, Store {
   final _$_TodoActionController = ActionController(name: '_Todo');
 
   @override
+  void setImage(String imagePath) {
+    final _$actionInfo =
+        _$_TodoActionController.startAction(name: '_Todo.setImage');
+    try {
+      return super.setImage(imagePath);
+    } finally {
+      _$_TodoActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void markDone() {
     final _$actionInfo =
         _$_TodoActionController.startAction(name: '_Todo.markDone');

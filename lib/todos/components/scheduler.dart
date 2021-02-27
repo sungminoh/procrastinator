@@ -11,14 +11,17 @@ import 'package:my_app/common/utils.dart';
  * @since 2/20/21.
  */
 class Scheduler extends StatefulWidget {
-  final DateTime baseDateTime;
-  final DateChangedCallback onDispose;
+  final DateTime dateTime;
+  final DateChangedCallback onChange;
+  final DateChangedCallback onConfirm;
+  final DateChangedCallback onDeactivate;
 
   Scheduler({
-    DateTime baseDateTime,
-    DateChangedCallback onDispose
-  }) : this.baseDateTime = baseDateTime ?? DateTime.now().add(Duration(minutes: 10)),
-        this.onDispose = onDispose ?? null;
+    @required this.dateTime,
+    this.onChange,
+    this.onConfirm,
+    this.onDeactivate,
+  });
 
   @override
   _SchedulerState createState() => _SchedulerState();
@@ -31,19 +34,43 @@ class _SchedulerState extends State<Scheduler> {
     setState(() {
       this.dateTime = dt;
     });
+    if (widget.onChange != null) {
+      widget.onChange(dt);
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    updateDateTime(widget.baseDateTime);
+    updateDateTime(widget.dateTime);
   }
 
   Widget getEditableTime() {
-    return TimeEditor(
-        dateTime: this.dateTime,
-        onConfirm: (dateTime) => updateDateTime(dateTime)
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: TimeEditor(
+              dateTime: dateTime,
+              onConfirm: (dt) => updateDateTime(dt)
+          ),
+        ),
+        widget.onConfirm != null ? MaterialButton(
+          child: Text("Done"),
+          onPressed: () {
+            widget.onConfirm(this.dateTime);
+            Navigator.pop(context, this.dateTime);
+          },
+        ) : Text('')
+      ],
     );
+  }
+
+  @override
+  void deactivate() {
+    if (widget.onDeactivate != null) {
+      widget.onDeactivate(this.dateTime);
+    }
   }
 
   Widget getGridButtons() {
@@ -56,14 +83,6 @@ class _SchedulerState extends State<Scheduler> {
         [Icon(Icons.watch_later), Icon(Icons.watch_later), Icon(Icons.watch_later)]
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    if (widget.onDispose != null) {
-      widget.onDispose(this.dateTime);
-    }
   }
 
   @override

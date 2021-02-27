@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:my_app/common/dart_api.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
 
@@ -27,7 +28,7 @@ abstract class _Todo with Store {
   String imagePath;
 
   @computed
-  File get image => File(imagePath);
+  File get image => !imagePath.isNullOrEmpty ? File(imagePath) : null;
 
   @observable
   DateTime dateTime;
@@ -41,14 +42,20 @@ abstract class _Todo with Store {
   Duration snooze;
 
   @action
+  void setImage(String imagePath) {
+    if (this.imagePath != null) {
+      this.image.delete();
+    }
+    this.imagePath = imagePath;
+  }
+
+  @action
   void markDone(){
     // TODO
   }
 
   @computed
-  bool get isEmpty =>
-      (content == null || content.isEmpty)
-      || (imagePath == null || imagePath.isEmpty);
+  bool get isEmpty => content.isNullOrEmpty && imagePath.isNullOrEmpty;
 
   // static TodoStore fromJson(Map<String, dynamic> json) {
   //   return TodoStore(
