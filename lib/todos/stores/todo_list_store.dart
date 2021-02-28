@@ -6,12 +6,10 @@ import 'package:my_app/common/utils.dart';
 import 'package:my_app/todos/services/database_service.dart';
 import 'package:my_app/todos/stores/todo_store.dart';
 
-
 part 'todo_list_store.g.dart';
 
 @lazySingleton
 class TodoList = _TodoList with _$TodoList;
-
 
 abstract class _TodoList with Store {
   _TodoList() {
@@ -29,8 +27,8 @@ abstract class _TodoList with Store {
 
   @action
   void remove(Todo todo) {
-    getIt<DatabaseService>().removeTodo(todo);
-    load();
+    todos.removeWhere((e) => e.id == todo.id);
+    todo.delete();
   }
 
   @action
@@ -48,5 +46,3 @@ abstract class _TodoList with Store {
     // TODO
   }
 }
-
-

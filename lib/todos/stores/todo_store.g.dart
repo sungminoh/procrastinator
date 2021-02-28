@@ -111,6 +111,17 @@ mixin _$Todo on _Todo, Store {
   }
 
   @override
+  void delete() {
+    final _$actionInfo =
+        _$_TodoActionController.startAction(name: '_Todo.delete');
+    try {
+      return super.delete();
+    } finally {
+      _$_TodoActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void markDone() {
     final _$actionInfo =
         _$_TodoActionController.startAction(name: '_Todo.markDone');

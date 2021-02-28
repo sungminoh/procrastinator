@@ -19,16 +19,13 @@ class TodoListView extends StatefulWidget {
   State createState() => _TodoListView();
 }
 
-
 class _TodoListView extends State<TodoListView> {
-
   void moveToEditView([Todo todo]) {
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => TodoEditView(todo),
-        )
-    ).then((value) => setState(() {}));
+        )).then((value) => setState(() {}));
   }
 
   @override
@@ -42,24 +39,19 @@ class _TodoListView extends State<TodoListView> {
               itemBuilder: (context, index) {
                 final Todo todo = todoList.todos[index];
                 return Swipeable(
-                    child: Container(
-                        child: ListTile(
-                          title: Text(todo.content ?? ""),
-                          onTap: () => moveToEditView(todo),
-                        ),
-                        decoration: new BoxDecoration(
-                            border: new Border(
-                                bottom: new BorderSide()
-                            )
-                        )
-                    ),
+                  child: Container(
+                      child: ListTile(
+                        title: Text(todo.content ?? ""),
+                        onTap: () => moveToEditView(todo),
+                      ),
+                      decoration: new BoxDecoration(
+                          border: new Border(bottom: new BorderSide()))),
                   leftSwipeWidget: Icon(Icons.done),
                   onLeftSwipe: () => todo.markDone(),
                   rightSwipeWidget: Icon(Icons.delete),
                   onRightSwipe: () => todoList.remove(todo),
                 );
-              }
-          );
+              });
         },
       ),
       floatingActionButton: FloatingActionButton(
