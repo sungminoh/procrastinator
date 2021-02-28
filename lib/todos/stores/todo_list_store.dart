@@ -41,6 +41,17 @@ abstract class _TodoList with Store {
     load();
   }
 
+  // @action
+  // void markDone(Todo todo) {
+  //   todo.markDone()
+  //   if (this.todos.where((element) => element.id == todo.id).isEmpty) {
+  //     getIt<DatabaseService>().addTodo(todo);
+  //   } else {
+  //     getIt<DatabaseService>().updateTodo(todo);
+  //   }
+  //   load();
+  // }
+
   void dispose() {
     logger.d("todo list is disposed");
     // TODO

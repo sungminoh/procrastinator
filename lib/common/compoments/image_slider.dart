@@ -24,7 +24,7 @@ class ImageSlider extends StatelessWidget {
     this.width = 500,
   });
 
-  Widget _buildItem(context, index) {
+  Widget _buildItem(BuildContext context, int index) {
     return Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(30.0)),
@@ -34,31 +34,32 @@ class ImageSlider extends StatelessWidget {
             )));
   }
 
+  void _moveImageViewer(BuildContext context, int index) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (builder) => ImageViewer(
+                  images,
+                  initialIndex: index,
+                )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 500,
+      height: height,
       child: Swiper(
-        onTap: (index) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (builder) => ImageViewer(
-                        images,
-                        initialIndex: index,
-                      )));
-        },
+        onTap: (index) => _moveImageViewer(context, index),
         itemBuilder: _buildItem,
-        // Image(image: FileImage(widget.todo.images[index]), fit: BoxFit.fill),
         itemCount: images.length,
         itemWidth: width,
         itemHeight: height,
         pagination: new SwiperPagination(),
+        viewportFraction: 0.8,
+        scale: 0.5,
+        fade: 0.0,
         // control: new SwiperControl(),
-        // viewportFraction: 0.8,
-        // scale: 0.5,
-        // fade: 0.5,
-        layout: SwiperLayout.TINDER,
+        // layout: SwiperLayout.TINDER,
       ),
     );
   }

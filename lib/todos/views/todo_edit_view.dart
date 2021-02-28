@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_app/common/compoments/text_editor.dart';
@@ -94,62 +96,78 @@ class _TodoEditViewState extends State<TodoEditView> {
     );
   }
 
+  Widget _buildButtons() {
+    return Container(
+      padding: EdgeInsets.all(30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _getTimeSelectButton(),
+          IconButton(
+            icon: Icon(Icons.photo_camera),
+            color: Colors.black,
+            onPressed: () {
+              getImage(ImageSource.camera).then((file) {
+                if (file != null) {
+                  widget.todo.addImage(file.path);
+                }
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.insert_photo),
+            color: Colors.black,
+            onPressed: () {
+              // MultiImagePicker.pickImages(
+              //   maxImages: 300,
+              // ).then((value) {
+              //   logger.i(value.map((e) => Asset).toList());
+              // });
+              getImage(ImageSource.gallery).then((file) {
+                if (file != null) {
+                  widget.todo.addImage(file.path);
+                }
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Observer(
-        builder: (builder) => Scaffold(
-              body: Column(
-                children: <Widget>[
-                  SizedBox(height: 60),
-                  if (widget.todo.images.length > 0)
+    return Scaffold(
+        body: LayoutBuilder(
+          builder: (context, viewportConstraints) => SingleChildScrollView(
+            child: Observer(
+              builder: (builder) => ConstrainedBox(
+                constraints:
+                    BoxConstraints(minHeight: viewportConstraints.maxHeight),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 60),
+                    if (widget.todo.imagePaths.length > 0)
+                      SizedBox(
+                          height: 200,
+                          child: ImageSlider(
+                            widget.todo.images,
+                            height: 200,
+                          )),
                     SizedBox(
-                      height: 300,
-                      child: ImageSlider(widget.todo.images),
-                    ),
-                  Expanded(
+                      height: 500,
                       child: TextEditor(
-                    content: widget.todo.content,
-                    textController: textController,
-                  )),
-                  Container(
-                    padding: EdgeInsets.all(30),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        _getTimeSelectButton(),
-                        IconButton(
-                          icon: Icon(Icons.photo_camera),
-                          color: Colors.black,
-                          onPressed: () {
-                            // getImage(ImageSource.camera)
-                            //     .then((file) {
-                            //   if (file != null) {
-                            //     widget.todo.addImage(file.path);
-                            //   }
-                            // });
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.insert_photo),
-                          color: Colors.black,
-                          onPressed: () async {
-                            // MultiImagePicker.pickImages(
-                            //   maxImages: 300,
-                            // ).then((value) {
-                            //   logger.i(value.map((e) => Asset).toList());
-                            // });
-                            getImage(ImageSource.gallery).then((file) {
-                              if (file != null) {
-                                widget.todo.addImage(file.path);
-                              }
-                            });
-                          },
-                        ),
-                      ],
+                        content: widget.todo.content,
+                        textController: textController,
+                      ),
                     ),
-                  )
-                ],
+                    // _buildButtons()
+                  ],
+                ),
               ),
-            ));
+            ),
+          ),
+        ),
+        floatingActionButton: _buildButtons());
   }
 }
