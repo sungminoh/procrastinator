@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -64,3 +66,26 @@ Future<File> getImage(ImageSource imageSource) async {
   final fileName = basename(imageFile.path);
   return tmpFile.copy('${appDir.path}/$fileName');
 }
+
+
+Future<Size> getImageSize(File file) async {
+  return file.readAsBytes()
+      .then((bytes) => decodeImageFromList(bytes))
+      .then((decodedImage) => Size(decodedImage.width.toDouble(), decodedImage.height.toDouble()));
+}
+
+
+Future<Size> getImageSizeFit(BuildContext context, File file) async {
+  Size screen = MediaQuery.of(context).size;
+  return getImageSize(file).then((size) {
+    double ratio = size.height / size.width;
+    double screenRatio = screen.height / screen.width;
+    if (ratio > screenRatio) {
+      return Size(screen.height / ratio, screen.height);
+    }
+    return Size(screen.width, screen.width * ratio);
+  });
+}
+
+
+

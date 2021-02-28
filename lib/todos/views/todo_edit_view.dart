@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:mobx/mobx.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:my_app/common/compoments/image_viewer.dart';
 import 'package:my_app/common/compoments/text_editor.dart';
 
 import 'package:flutter/material.dart';
@@ -55,76 +56,86 @@ class _TodoEditViewState extends State<TodoEditView> {
     });
   }
 
-  _buildEditorButtonBar() {
+  Widget _getTimeSelectButton() {
+    return MaterialButton(
+      color: Theme.of(context).buttonTheme.colorScheme.background,
+      padding: EdgeInsets.all(10.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.watch_later),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+              widget.todo.dateTime != null
+                  ? formatDateTime(widget.todo.dateTime)
+                  : 'No time set',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+              )),
+        ],
+      ),
+      onPressed: () {
+        showFloatingModalBottomSheet(
+          context: context,
+          builder: (context) => SizedBox(
+            height: 400,
+            child: Scheduler(
+                dateTime: widget.todo.dateTime ??
+                    DateTime.now().add(Duration(minutes: 10)),
+                onDeactivate: (dateTime) {
+                  widget.todo.dateTime = dateTime;
+                }),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          SizedBox(height: 60),
-          Expanded(
-              child: TextEditor(
-                content: widget.todo.content,
-                textController: textController,
-                image: widget.todo.image,
-              )),
-          Container(
-            child: Row(
-              children: [
-                Container(
-                  // decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.all(Radius.circular(20)),
-                  //     color: Theme.of(context).buttonTheme.colorScheme.background
-                  // ),
-                  child: MaterialButton(
-                    // tooltip: Constants.RESCHEDULE_TODO_BUTTON_TOOLTIP,
-                    onPressed: () {
-                      showFloatingModalBottomSheet(
-                        context: context,
-                        builder: (context) => SizedBox(
-                          height: 400,
-                          child: Scheduler(
-                              dateTime: widget.todo.dateTime ?? DateTime.now().add(Duration(minutes: 10)),
-                              onDeactivate: (dateTime) {
-                                widget.todo.dateTime = dateTime;
-                              }
-                          ),
-                        ),
-                      );
-                    },
+    return Observer(
+        builder: (builder) => Scaffold(
+              body: Column(
+                children: <Widget>[
+                  SizedBox(height: 60),
+                  if (widget.todo.image != null)
+                    ImageViewer(image: FileImage(widget.todo.image)),
+                  Expanded(
+                      child: TextEditor(
+                    content: widget.todo.content,
+                    textController: textController,
+                  )),
+                  Container(
+                    padding: EdgeInsets.all(30),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Icon(Icons.watch_later),
-                        Observer(builder: (builder) => Text(
-                            widget.todo.dateTime != null ? formatDateTime(widget.todo.dateTime) : 'No time set'
-                        ))
+                        _getTimeSelectButton(),
+                        IconButton(
+                          icon: Icon(Icons.photo_camera),
+                          color: Colors.black,
+                          onPressed: () {
+                            getImage(ImageSource.camera).then(
+                                (file) => widget.todo.setImage(file.path));
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.insert_photo),
+                          color: Colors.black,
+                          onPressed: () {
+                            getImage(ImageSource.gallery).then(
+                                (file) => widget.todo.setImage(file.path));
+                          },
+                        ),
                       ],
                     ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.photo_camera),
-                  color: Colors.black,
-                  onPressed: () {
-                    getImage(ImageSource.camera)
-                        .then((file) => widget.todo.setImage(file.path));
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.insert_photo),
-                  color: Colors.black,
-                  onPressed: () {
-                    getImage(ImageSource.gallery)
-                        .then((file) => widget.todo.setImage(file.path));
-                  },
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+                  )
+                ],
+              ),
+            ));
   }
 }
