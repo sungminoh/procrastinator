@@ -11,13 +11,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case Routes.HOME_ROUTE:
     default:
       return MaterialPageRoute(builder: (context) => TodoListView());
-      // return MaterialPageRoute(
-      //   builder: (context) => Scaffold(
-      //     body: Center(
-      //       child: Text('No path for ${settings.name}'),
-      //     ),
-      //   ),
-      // );
+    // return MaterialPageRoute(
+    //   builder: (context) => Scaffold(
+    //     body: Center(
+    //       child: Text('No path for ${settings.name}'),
+    //     ),
+    //   ),
+    // );
   }
 }
-

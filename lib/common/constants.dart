@@ -7,11 +7,9 @@ class Constants {
   static const double SWIPE_SENSITIVITY = 1.0;
 }
 
-
 // Routes
 
 class Routes {
   static const String HOME_ROUTE = "/home";
   static const String ADD_TODO_ROUTE = "/add_todo";
 }
-

@@ -10,16 +10,20 @@ import 'package:path_provider/path_provider.dart';
 
 var logger = Logger(
   printer: PrettyPrinter(
-      methodCount: 4, // number of method calls to be displayed
-      errorMethodCount: 8, // number of method calls if stacktrace is provided
-      lineLength: 120, // width of the output
-      colors: false, // Colorful log messages
-      printEmojis: true, // Print an emoji for each log message
+      methodCount: 4,
+      // number of method calls to be displayed
+      errorMethodCount: 8,
+      // number of method calls if stacktrace is provided
+      lineLength: 120,
+      // width of the output
+      colors: false,
+      // Colorful log messages
+      printEmojis: true,
+      // Print an emoji for each log message
       printTime: false // Should each log print contain a timestamp
-  ),
+      ),
   level: Level.info,
 );
-
 
 String formatDateTime(DateTime dateTime) {
   DateFormat dateFormat = dateTime.year == DateTime.now().year
@@ -27,7 +31,6 @@ String formatDateTime(DateTime dateTime) {
       : DateFormat.yMMMEd();
   return dateFormat.add_Hm().format(dateTime);
 }
-
 
 String formatDateDiff(DateTime base, DateTime target) {
   Duration diff = target.difference(base.subtract(Duration(minutes: 1)));
@@ -54,7 +57,6 @@ String formatDateDiff(DateTime base, DateTime target) {
   return diff.isNegative ? '$text ago' : 'in $text';
 }
 
-
 Future<File> getImage(ImageSource imageSource) async {
   ImagePicker picker = new ImagePicker();
   PickedFile imageFile = await picker.getImage(source: imageSource);
@@ -67,13 +69,11 @@ Future<File> getImage(ImageSource imageSource) async {
   return tmpFile.copy('${appDir.path}/$fileName');
 }
 
-
 Future<Size> getImageSize(File file) async {
-  return file.readAsBytes()
-      .then((bytes) => decodeImageFromList(bytes))
-      .then((decodedImage) => Size(decodedImage.width.toDouble(), decodedImage.height.toDouble()));
+  return file.readAsBytes().then((bytes) => decodeImageFromList(bytes)).then(
+      (decodedImage) =>
+          Size(decodedImage.width.toDouble(), decodedImage.height.toDouble()));
 }
-
 
 Future<Size> getImageSizeFit(BuildContext context, File file) async {
   Size screen = MediaQuery.of(context).size;
@@ -86,6 +86,3 @@ Future<Size> getImageSizeFit(BuildContext context, File file) async {
     return Size(screen.width, screen.width * ratio);
   });
 }
-
-
-

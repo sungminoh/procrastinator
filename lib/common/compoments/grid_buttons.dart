@@ -11,8 +11,8 @@ class GridButtons extends StatefulWidget {
   final int width;
   final int height;
 
-
-  GridButtons({Key key, this.children, this.width, this.height}) : super(key: key);
+  GridButtons({Key key, this.children, this.width, this.height})
+      : super(key: key);
 
   @override
   _GridButtonsState createState() => _GridButtonsState();
@@ -24,13 +24,17 @@ class _GridButtonsState extends State<GridButtons> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.max,
-      children: widget.children.map((row) => Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: row.map((wdg) => Container(
-          child: wdg,
-        )).toList(growable: false),
-      )).toList(growable: false),
+      children: widget.children
+          .map((row) => Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: row
+                    .map((wdg) => Container(
+                          child: wdg,
+                        ))
+                    .toList(growable: false),
+              ))
+          .toList(growable: false),
     );
   }
 }

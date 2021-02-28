@@ -27,16 +27,14 @@ class TimeEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-        child: getText(),
-        onPressed: () {
-          DatePicker.showDateTimePicker(
-              context,
-              currentTime: this.dateTime,
-              onChanged: this.onChanged,
-              onConfirm: this.onConfirm,
-              locale: LocaleType.en
-          );
-        },
+      child: getText(),
+      onPressed: () {
+        DatePicker.showDateTimePicker(context,
+            currentTime: this.dateTime,
+            onChanged: this.onChanged,
+            onConfirm: this.onConfirm,
+            locale: LocaleType.en);
+      },
     );
   }
 }

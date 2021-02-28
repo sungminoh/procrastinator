@@ -48,10 +48,8 @@ class _SwipeableState extends State<Swipeable>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        vsync: this,
-        duration: widget.animationDuration
-    );
+    _controller =
+        AnimationController(vsync: this, duration: widget.animationDuration);
     _animation = Tween<Offset>(
       begin: Offset.zero,
       end: Offset.zero,
@@ -127,20 +125,18 @@ class _SwipeableState extends State<Swipeable>
               Visibility(
                 visible: widget.onRightSwipe != null,
                 child: AnimatedOpacity(
-                  opacity: _leftIconAnimation.value,
-                  duration: widget.animationDuration,
-                  curve: Curves.decelerate,
-                  child: widget.rightSwipeWidget?? Container()
-                ),
+                    opacity: _leftIconAnimation.value,
+                    duration: widget.animationDuration,
+                    curve: Curves.decelerate,
+                    child: widget.rightSwipeWidget ?? Container()),
               ),
               Visibility(
                 visible: widget.onLeftSwipe != null,
                 child: AnimatedOpacity(
-                  opacity: _rightIconAnimation.value,
-                  duration: widget.animationDuration,
-                  curve: Curves.decelerate,
-                  child: widget.leftSwipeWidget ?? Container()
-                ),
+                    opacity: _rightIconAnimation.value,
+                    duration: widget.animationDuration,
+                    curve: Curves.decelerate,
+                    child: widget.leftSwipeWidget ?? Container()),
               ),
             ],
           ),
