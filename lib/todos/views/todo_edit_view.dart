@@ -1,20 +1,18 @@
-import 'dart:io';
-import 'package:mobx/mobx.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:my_app/common/compoments/image_viewer.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_app/common/compoments/text_editor.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:my_app/common/compoments/floatting_modal.dart';
-import 'package:my_app/common/constants.dart';
 import 'package:my_app/common/locator.dart';
 import 'package:my_app/common/utils.dart';
 import 'package:my_app/common/dart_api.dart';
 import 'package:my_app/todos/components/scheduler.dart';
 import 'package:my_app/todos/stores/todo_list_store.dart';
 import 'package:my_app/todos/stores/todo_store.dart';
+
+import '../../common/compoments/image_slider.dart';
 
 /**
  * todo_edit_view
@@ -35,14 +33,15 @@ class TodoEditView extends StatefulWidget {
 class _TodoEditViewState extends State<TodoEditView> {
   // final _formKey = GlobalKey<FormState>();
   final TextEditingController textController = TextEditingController();
+  final CarouselController buttonCarouselController = CarouselController();
 
   @override
   void dispose() {
     if (!widget.todo.isEmpty) {
       getIt<TodoList>().update(widget.todo);
     }
-    super.dispose();
     this.textController.dispose();
+    super.dispose();
   }
 
   @override
@@ -102,8 +101,11 @@ class _TodoEditViewState extends State<TodoEditView> {
               body: Column(
                 children: <Widget>[
                   SizedBox(height: 60),
-                  if (widget.todo.image != null)
-                    ImageViewer(image: FileImage(widget.todo.image)),
+                  if (widget.todo.images.length > 0)
+                    SizedBox(
+                      height: 300,
+                      child: ImageSlider(widget.todo.images),
+                    ),
                   Expanded(
                       child: TextEditor(
                     content: widget.todo.content,
@@ -119,16 +121,28 @@ class _TodoEditViewState extends State<TodoEditView> {
                           icon: Icon(Icons.photo_camera),
                           color: Colors.black,
                           onPressed: () {
-                            getImage(ImageSource.camera).then(
-                                (file) => widget.todo.setImage(file.path));
+                            // getImage(ImageSource.camera)
+                            //     .then((file) {
+                            //   if (file != null) {
+                            //     widget.todo.addImage(file.path);
+                            //   }
+                            // });
                           },
                         ),
                         IconButton(
                           icon: Icon(Icons.insert_photo),
                           color: Colors.black,
-                          onPressed: () {
-                            getImage(ImageSource.gallery).then(
-                                (file) => widget.todo.setImage(file.path));
+                          onPressed: () async {
+                            // MultiImagePicker.pickImages(
+                            //   maxImages: 300,
+                            // ).then((value) {
+                            //   logger.i(value.map((e) => Asset).toList());
+                            // });
+                            getImage(ImageSource.gallery).then((file) {
+                              if (file != null) {
+                                widget.todo.addImage(file.path);
+                              }
+                            });
                           },
                         ),
                       ],

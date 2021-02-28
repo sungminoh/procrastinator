@@ -3,48 +3,17 @@
 part of 'todo_store.dart';
 
 // **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
-Todo _$TodoFromJson(Map<String, dynamic> json) {
-  return Todo()
-    ..id = json['id'] as int
-    ..content = json['content'] as String
-    ..imagePath = json['imagePath'] as String
-    ..dateTime = json['dateTime'] == null
-        ? null
-        : DateTime.parse(json['dateTime'] as String)
-    ..timeZone = json['timeZone'] as String
-    ..interval = json['interval'] == null
-        ? null
-        : Duration(microseconds: json['interval'] as int)
-    ..snooze = json['snooze'] == null
-        ? null
-        : Duration(microseconds: json['snooze'] as int);
-}
-
-Map<String, dynamic> _$TodoToJson(Todo instance) => <String, dynamic>{
-      'id': instance.id,
-      'content': instance.content,
-      'imagePath': instance.imagePath,
-      'dateTime': instance.dateTime?.toIso8601String(),
-      'timeZone': instance.timeZone,
-      'interval': instance.interval?.inMicroseconds,
-      'snooze': instance.snooze?.inMicroseconds,
-    };
-
-// **************************************************************************
 // StoreGenerator
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$Todo on _Todo, Store {
-  Computed<File> _$imageComputed;
+  Computed<List<FileImage>> _$imagesComputed;
 
   @override
-  File get image => (_$imageComputed ??=
-          Computed<File>(() => super.image, name: '_Todo.image'))
+  List<FileImage> get images => (_$imagesComputed ??=
+          Computed<List<FileImage>>(() => super.images, name: '_Todo.images'))
       .value;
   Computed<bool> _$isEmptyComputed;
 
@@ -68,18 +37,18 @@ mixin _$Todo on _Todo, Store {
     });
   }
 
-  final _$imagePathAtom = Atom(name: '_Todo.imagePath');
+  final _$imagePathsAtom = Atom(name: '_Todo.imagePaths');
 
   @override
-  String get imagePath {
-    _$imagePathAtom.reportRead();
-    return super.imagePath;
+  ObservableList<String> get imagePaths {
+    _$imagePathsAtom.reportRead();
+    return super.imagePaths;
   }
 
   @override
-  set imagePath(String value) {
-    _$imagePathAtom.reportWrite(value, super.imagePath, () {
-      super.imagePath = value;
+  set imagePaths(ObservableList<String> value) {
+    _$imagePathsAtom.reportWrite(value, super.imagePaths, () {
+      super.imagePaths = value;
     });
   }
 
@@ -131,11 +100,11 @@ mixin _$Todo on _Todo, Store {
   final _$_TodoActionController = ActionController(name: '_Todo');
 
   @override
-  void setImage(String imagePath) {
+  void addImage(String imagePath) {
     final _$actionInfo =
-        _$_TodoActionController.startAction(name: '_Todo.setImage');
+        _$_TodoActionController.startAction(name: '_Todo.addImage');
     try {
-      return super.setImage(imagePath);
+      return super.addImage(imagePath);
     } finally {
       _$_TodoActionController.endAction(_$actionInfo);
     }
@@ -156,11 +125,11 @@ mixin _$Todo on _Todo, Store {
   String toString() {
     return '''
 content: ${content},
-imagePath: ${imagePath},
+imagePaths: ${imagePaths},
 dateTime: ${dateTime},
 interval: ${interval},
 snooze: ${snooze},
-image: ${image},
+images: ${images},
 isEmpty: ${isEmpty}
     ''';
   }

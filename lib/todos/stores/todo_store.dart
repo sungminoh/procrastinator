@@ -1,39 +1,58 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:my_app/common/dart_api.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
 
 part 'todo_store.g.dart';
 
-
-@JsonSerializable()
 class Todo extends _ObservableTodo {
   Todo();
-  factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
-  Map<String, dynamic> toJson() => _$TodoToJson(this);
+
+  factory Todo.fromJson(Map<String, dynamic> json) {
+    Todo todo = Todo();
+    todo.id = json['id'];
+    todo.content = json['content'];
+    todo.imagePaths.addAll(json['imagePaths'].cast<String>());
+    todo.dateTime = json['dateTime'];
+    todo.timeZone = json['timeZone'];
+    todo.interval = json['interval'];
+    todo.snooze = json['snooze'];
+    return todo;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'content': content,
+      'imagePaths': List<String>.of(this.imagePaths),
+      'dateTime': dateTime,
+      'timeZone': timeZone,
+      'interval': interval,
+      'snooze': snooze,
+    };
+  }
 }
 
-
 class _ObservableTodo = _Todo with _$Todo;
-
 
 abstract class _Todo with Store {
   int id;
 
   @observable
-  String content;
+  String content = '';
 
   @observable
-  String imagePath;
+  ObservableList<String> imagePaths = ObservableList<String>();
 
   @computed
-  File get image => !imagePath.isNullOrEmpty ? File(imagePath) : null;
+  List<FileImage> get images =>
+      imagePaths.map((e) => FileImage(File(e))).toList();
 
   @observable
   DateTime dateTime;
 
-  String timeZone;
+  String timeZone = '';
 
   @observable
   Duration interval;
@@ -42,31 +61,17 @@ abstract class _Todo with Store {
   Duration snooze;
 
   @action
-  void setImage(String imagePath) {
-    if (this.imagePath != null) {
-      this.image.delete();
+  void addImage(String imagePath) {
+    if (imagePath.isNotEmpty) {
+      this.imagePaths.add(imagePath);
     }
-    this.imagePath = imagePath;
   }
 
   @action
-  void markDone(){
+  void markDone() {
     // TODO
   }
 
   @computed
-  bool get isEmpty => content.isNullOrEmpty && imagePath.isNullOrEmpty;
-
-  // static TodoStore fromJson(Map<String, dynamic> json) {
-  //   return TodoStore(
-  //     id: json['id'],
-  //     content: json['content'],
-  //     imagePath: json['imagePath'],
-  //     complete: json['complete'],
-  //     dateTime: json['dateTime'],
-  //     interval: json['interval'],
-  //     snooze: json['snooze'],
-  //   );
-  // }
+  bool get isEmpty => content.isNullOrEmpty && imagePaths.length == 0;
 }
-

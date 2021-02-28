@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:async/async.dart';
 import 'package:injectable/injectable.dart';
 import 'package:my_app/common/utils.dart';
@@ -13,17 +15,32 @@ class DatabaseService {
   final _initDBMemoizer = AsyncMemoizer<Database>();
   Future<Database> _database;
 
+  Map<String, dynamic> toDict(Todo todo) {
+    Map<String, dynamic> json = todo.toJson();
+    if (json.containsKey('id')) {
+      return {'id': json.remove('id'), 'json': jsonEncode(json)};
+    }
+    return {'json': jsonEncode(json)};
+  }
+
+  Todo toTodo(Map<String, dynamic> data) {
+    Todo todo = Todo.fromJson(jsonDecode(data['json']));
+    if (data.containsKey('id')) {
+      todo.id = data['id'];
+    }
+    return todo;
+  }
+
   DatabaseService() {
     this.database;
   }
 
   Future<Database> get database async {
-    if (_database != null)
-      return _database;
+    if (_database != null) return _database;
     return _initDBMemoizer.runOnce(() => initalize());
   }
 
-  Future<String> _getPath() async{
+  Future<String> _getPath() async {
     return join(await getDatabasesPath(), TODO_DB);
   }
 
@@ -40,22 +57,15 @@ class DatabaseService {
     String path = await _getPath();
     logger.d('Initializing _database at $path');
     // await _deleteDatabase();
-    return openDatabase(
-        path,
+    return openDatabase(path,
         onOpen: (db) => logger.d('Database $TODO_DB opened'),
         onCreate: (db, version) {
           db.execute('''
             CREATE TABLE $TODO_TABLE(
               id INTEGER PRIMARY KEY,
-              content TEXT,
-              imagePath TEXT,
-              dateTime TEXT,
-              timeZone TEXT,
-              interval INTEGER,
-              snooze INTEGER
+              json TEXT
             )
-            '''
-          ).then((value) {
+            ''').then((value) {
             logger.d('Table $TODO_TABLE created');
           }).onError((error, stackTrace) {
             logger.e('Fail to create table', error, stackTrace);
@@ -69,12 +79,12 @@ class DatabaseService {
     logger.d('get todos from database');
     return database
         .then((db) => db.query(TODO_TABLE))
-        .then((results) => results.map((todo) => Todo.fromJson(todo)).toList());
+        .then((results) => results.map(toTodo).toList());
   }
 
   Future<void> addTodo(Todo todo) async {
     database
-        .then((db) => db.insert(TODO_TABLE, todo.toJson()))
+        .then((db) => db.insert(TODO_TABLE, toDict(todo)))
         .then((value) => todo.id = value)
         .onError((error, stackTrace) {
       logger.e('Fail to insert $todo', error, stackTrace);
@@ -84,7 +94,8 @@ class DatabaseService {
 
   Future<void> updateTodo(Todo todo) async {
     database
-        .then((db) => db.update(TODO_TABLE, todo.toJson(), where: 'id=${todo.id}'))
+        .then(
+            (db) => db.update(TODO_TABLE, toDict(todo), where: 'id=${todo.id}'))
         .onError((error, stackTrace) {
       logger.e('Fail to update $todo', error, stackTrace);
       return error;
