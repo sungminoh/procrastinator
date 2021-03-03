@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_app/common/dart_api.dart';
 import 'package:mobx/mobx.dart';
 import 'package:my_app/common/locator.dart';
-import 'package:my_app/todos/services/database_service.dart';
+import 'package:my_app/todos/services/todo_database_service.dart';
 import 'package:my_app/todos/stores/todo_list_store.dart';
 
 part 'todo_store.g.dart';
@@ -73,7 +73,7 @@ abstract class _Todo with Store {
   @action
   void delete() {
     images.forEach((fileImage) => fileImage.file.delete());
-    getIt<DatabaseService>().removeTodo(this);
+    getIt<TodoDatabaseService>().removeTodo(this);
   }
 
   @action

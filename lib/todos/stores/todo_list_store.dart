@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 import 'package:my_app/common/locator.dart';
 import 'package:my_app/common/utils.dart';
-import 'package:my_app/todos/services/database_service.dart';
+import 'package:my_app/todos/services/todo_database_service.dart';
 import 'package:my_app/todos/stores/todo_store.dart';
 
 part 'todo_list_store.g.dart';
@@ -19,7 +19,7 @@ abstract class _TodoList with Store {
 
   Future load() async {
     logger.d('TodoList loads todos');
-    this.todos = ObservableList.of(await getIt<DatabaseService>().getTodos());
+    this.todos = ObservableList.of(await getIt<TodoDatabaseService>().getTodos());
   }
 
   @observable
@@ -34,9 +34,9 @@ abstract class _TodoList with Store {
   @action
   void update(Todo todo) {
     if (this.todos.where((element) => element.id == todo.id).isEmpty) {
-      getIt<DatabaseService>().addTodo(todo);
+      getIt<TodoDatabaseService>().addTodo(todo);
     } else {
-      getIt<DatabaseService>().updateTodo(todo);
+      getIt<TodoDatabaseService>().updateTodo(todo);
     }
     load();
   }

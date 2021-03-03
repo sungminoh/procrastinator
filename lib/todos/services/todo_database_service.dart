@@ -11,7 +11,7 @@ const String TODO_DB = 'todo_database.db';
 const String TODO_TABLE = 'todos';
 
 @singleton
-class DatabaseService {
+class TodoDatabaseService {
   final _initDBMemoizer = AsyncMemoizer<Database>();
   Future<Database> _database;
 
@@ -31,7 +31,7 @@ class DatabaseService {
     return todo;
   }
 
-  DatabaseService() {
+  TodoDatabaseService() {
     this.database;
   }
 
