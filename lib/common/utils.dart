@@ -32,15 +32,15 @@ String formatDateTime(DateTime dateTime) {
   return dateFormat.add_Hm().format(dateTime);
 }
 
-String formatDateDiff(DateTime base, DateTime target) {
+String formatDateTimeDiff(DateTime base, DateTime target) {
   Duration diff = target.difference(base.subtract(Duration(minutes: 1)));
   if (diff.inMinutes == 0) {
     return 'Now';
   }
-  int mins = diff.inMinutes.abs();
-  int hours = diff.inHours.abs();
-  int days = diff.inDays.abs();
-  int weeks = (diff.inDays.abs() / 7).ceil();
+  int mins =  diff.inMinutes > 0 ? diff.inMinutes : -diff.inMinutes + 1;
+  int hours =  diff.inHours > 0 ? diff.inHours : -diff.inHours + 1;
+  int days =  diff.inDays > 0 ? diff.inDays : -diff.inDays + 1;
+  int weeks = ( diff.inDays > 0 ? diff.inDays : -diff.inDays + 1 / 7).ceil();
   int months = target.month - base.month;
   String text;
   if (mins < 60) {
@@ -85,4 +85,33 @@ Future<Size> getImageSizeFit(BuildContext context, File file) async {
     }
     return Size(screen.width, screen.width * ratio);
   });
+}
+
+DateTime nextDateTime({int year, int month, int day, int hour, int minute, int second, int weekday}) {
+  assert(day == null || weekday == null);
+  DateTime ret = DateTime.now();
+  List<int> current = [ret.year, ret.month, ret.day, ret.hour, ret.minute, ret.second];
+  if (second != null) {
+    ret = DateTime(ret.year, ret.month, ret.day, ret.hour, ret.minute, ret.second + (second - ret.second) % 60);
+  }
+  if (minute != null) {
+    ret = DateTime(ret.year, ret.month, ret.day, ret.hour, ret.minute + (minute - ret.minute) % 60, ret.second);
+  }
+  if (hour != null) {
+    ret = DateTime(ret.year, ret.month, ret.day, ret.hour + (hour - ret.hour) % 24, ret.minute, ret.second);
+  }
+  if (day != null) {
+    ret = DateTime(ret.year, ret.month, ret.day + (day - ret.day) % DateUtils.getDaysInMonth(ret.year, ret.month), ret.hour, ret.minute, ret.second);
+  }
+  if (weekday != null) {
+    ret = DateTime(ret.year, ret.month, ret.day + (weekday - ret.weekday) % 7, ret.hour, ret.minute, ret.second);
+  }
+  if (month != null) {
+    ret = DateTime(ret.year, ret.month + (month - ret.month) % 12, ret.day, ret.hour, ret.minute, ret.second);
+  }
+  if (year != null) {
+    assert(year > ret.year);
+    ret = DateTime(year, ret.month, ret.day, ret.hour, ret.minute, ret.second);
+  }
+  return ret;
 }

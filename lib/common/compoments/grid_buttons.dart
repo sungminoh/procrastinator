@@ -26,13 +26,9 @@ class _GridButtonsState extends State<GridButtons> {
       mainAxisSize: MainAxisSize.max,
       children: widget.children
           .map((row) => Row(
-                mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: row
-                    .map((wdg) => Container(
-                          child: wdg,
-                        ))
-                    .toList(growable: false),
+                mainAxisSize: MainAxisSize.max,
+                children: row,
               ))
           .toList(growable: false),
     );

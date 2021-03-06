@@ -20,7 +20,7 @@ class TimeEditor extends StatelessWidget {
 
   Widget getText() {
     String formattedDate = formatDateTime(this.dateTime);
-    String dateDiff = formatDateDiff(DateTime.now(), this.dateTime);
+    String dateDiff = formatDateTimeDiff(DateTime.now(), this.dateTime);
     return Text('$formattedDate, $dateDiff');
   }
 

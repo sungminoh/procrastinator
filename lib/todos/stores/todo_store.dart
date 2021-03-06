@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_app/common/dart_api.dart';
 import 'package:mobx/mobx.dart';
 import 'package:my_app/common/locator.dart';
+import 'package:my_app/common/utils.dart';
 import 'package:my_app/todos/services/todo_database_service.dart';
 import 'package:my_app/todos/stores/todo_list_store.dart';
 
@@ -17,7 +18,7 @@ class Todo extends _ObservableTodo {
     todo.id = json['id'];
     todo.content = json['content'];
     todo.imagePaths.addAll(json['imagePaths'].cast<String>());
-    todo.dateTime = json['dateTime'];
+    todo.dateTime = DateTime.parse(json['dateTime']);
     todo.timeZone = json['timeZone'];
     todo.interval = json['interval'];
     todo.snooze = json['snooze'];
@@ -29,7 +30,7 @@ class Todo extends _ObservableTodo {
       'id': id,
       'content': content,
       'imagePaths': List<String>.of(this.imagePaths),
-      'dateTime': dateTime,
+      'dateTime': dateTime.toIso8601String(),
       'timeZone': timeZone,
       'interval': interval,
       'snooze': snooze,

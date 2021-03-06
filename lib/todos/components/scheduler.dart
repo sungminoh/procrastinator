@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:mobx/mobx.dart';
 import 'package:my_app/common/compoments/grid_buttons.dart';
 import 'package:my_app/common/compoments/time_editor.dart';
+import 'package:my_app/common/models/time.dart';
 import 'package:my_app/common/utils.dart';
 
 /**
@@ -51,18 +51,59 @@ class _SchedulerState extends State<Scheduler> {
       children: [
         Expanded(
           child: TimeEditor(
-              dateTime: dateTime,
-              onConfirm: (dt) => updateDateTime(dt)
-          ),
+              dateTime: dateTime, onConfirm: (dt) => updateDateTime(dt)),
         ),
-        widget.onConfirm != null ? MaterialButton(
-          child: Text("Done"),
-          onPressed: () {
-            widget.onConfirm(this.dateTime);
-            Navigator.pop(context, this.dateTime);
-          },
-        ) : Text('')
+        widget.onConfirm != null
+            ? MaterialButton(
+                child: Text("Done"),
+                onPressed: () {
+                  widget.onConfirm(this.dateTime);
+                  Navigator.pop(context, this.dateTime);
+                },
+              )
+            : Text('')
       ],
+    );
+  }
+
+  Widget timeToButton(Time time) {
+    Widget title = Text('+10 min');
+    if (time.absolute) {
+      title = Text('${time.hour}:${time.minute.toString().padLeft(2, '0')}');
+    } else if (time.day != null) {
+      title = Text('${time.day} day');
+    } else if (time.hour != null) {
+      title = Text('${time.hour} hr');
+    } else if (time.minute != null) {
+      title = Text('${time.minute} min');
+    }
+
+    Function getTargetDate = () {
+      if (time.absolute) {
+        return nextDateTime(
+          hour: time.hour,
+          minute: time.minute,
+        );
+      } else if (time.day != null) {
+        return this.dateTime.add(Duration(
+          days: time.day,
+        ));
+      } else if (time.hour != null) {
+        return this.dateTime.add(Duration(
+          hours: time.hour,
+        ));
+      } else if (time.minute != null) {
+        return this.dateTime.add(Duration(
+          minutes: time.minute,
+        ));
+      }
+    };
+
+    return Expanded(
+      child: OutlinedButton(
+        child: title,
+        onPressed: () => updateDateTime(getTargetDate()),
+      ),
     );
   }
 
@@ -75,13 +116,29 @@ class _SchedulerState extends State<Scheduler> {
 
   Widget getGridButtons() {
     // TODO: load from configuration
-    return GridButtons(
-      children: [
-        [Icon(Icons.watch_later), Icon(Icons.watch_later), Icon(Icons.watch_later)],
-        [Icon(Icons.watch_later), Icon(Icons.watch_later), Icon(Icons.watch_later)],
-        [Icon(Icons.watch_later), Icon(Icons.watch_later), Icon(Icons.watch_later)],
-        [Icon(Icons.watch_later), Icon(Icons.watch_later), Icon(Icons.watch_later)]
+    List<List<Time>> times = [
+      [
+        Time(hour: 9, minute: 30, absolute: true),
+        Time(hour: 12, minute: 0, absolute: true),
+        Time(hour: 18, minute: 30, absolute: true),
+        Time(hour: 22, minute: 0, absolute: true)
       ],
+      [
+        Time(minute: 10, absolute: false),
+        Time(hour: 1, absolute: false),
+        Time(hour: 3, absolute: false),
+        Time(day: 1, absolute: false)
+      ],
+      [
+        Time(minute: -10, absolute: false),
+        Time(hour: -1, absolute: false),
+        Time(hour: -3, absolute: false),
+        Time(day: -1, absolute: false)
+      ]
+    ];
+
+    return GridButtons(
+      children: times.map((row) => row.map(timeToButton).toList()).toList(),
     );
   }
 
@@ -92,7 +149,7 @@ class _SchedulerState extends State<Scheduler> {
       children: [
         SizedBox(height: 50, child: getEditableTime()),
         Expanded(child: getGridButtons())
-      ],);
+      ],
+    );
   }
-
 }
