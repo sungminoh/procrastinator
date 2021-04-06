@@ -9,7 +9,6 @@ import 'common/router.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   configureDependencies();
   runApp(MyApp());
 }

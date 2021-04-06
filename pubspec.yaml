@@ -17,6 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.0+1
 
+
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
@@ -36,13 +37,13 @@ dependencies:
   image_picker: ^0.6.7+22
   multi_image_picker: ^4.7.15
   photo_view: ^0.10.3
-#  flutter_hooks: ^0.15.0
   # State management
   provider: ^4.3.3
   mobx: ^1.2.1+4
   flutter_mobx: ^1.1.0+2
   # Functionalities
   share: ^0.6.5+4
+  flutter_local_notifications: ^4.0.1+1
   android_alarm_manager: ^0.4.5+20
   flutter_secure_storage: ^3.3.5  # keychain
   url_launcher: ^5.7.10
@@ -61,6 +62,7 @@ dependencies:
   responsive_builder: ^0.3.0
   # Components
   flutter_datetime_picker: ^1.5.0
+  flutter_picker: ^1.1.5
   convex_bottom_bar: ^2.6.0  # bottom tab with  n animation
   curved_navigation_bar: ^0.3.7  # curved navigation bar.
   flutter_slidable: ^0.5.7  # slidable card widget like an email app

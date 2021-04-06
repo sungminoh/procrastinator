@@ -24,6 +24,13 @@ mixin _$TodoList on _TodoList, Store {
     });
   }
 
+  final _$updateAsyncAction = AsyncAction('_TodoList.update');
+
+  @override
+  Future<Todo> update(Todo todo) {
+    return _$updateAsyncAction.run(() => super.update(todo));
+  }
+
   final _$_TodoListActionController = ActionController(name: '_TodoList');
 
   @override
@@ -32,17 +39,6 @@ mixin _$TodoList on _TodoList, Store {
         _$_TodoListActionController.startAction(name: '_TodoList.remove');
     try {
       return super.remove(todo);
-    } finally {
-      _$_TodoListActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void update(Todo todo) {
-    final _$actionInfo =
-        _$_TodoListActionController.startAction(name: '_TodoList.update');
-    try {
-      return super.update(todo);
     } finally {
       _$_TodoListActionController.endAction(_$actionInfo);
     }

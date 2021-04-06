@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:my_app/common/compoments/swipeable.dart';
 import 'package:my_app/common/constants.dart';
+import 'package:my_app/common/local_notification.dart';
 import 'package:my_app/common/locator.dart';
 import 'package:my_app/common/utils.dart';
 import 'package:my_app/todos/stores/todo_store.dart';
 import 'package:my_app/todos/stores/todo_list_store.dart';
 import 'package:my_app/todos/views/todo_edit_view.dart';
+
 
 /**
  * todo_list_view
@@ -50,25 +51,31 @@ class _TodoListView extends State<TodoListView> {
   }
 
   Widget _buildTile(Todo todo) {
-    return ListTile(
-      leading: todo.images.length > 0
-          ? CircleAvatar(
-              backgroundImage: todo.images[0],
-              foregroundColor: Colors.white,
-            )
-          : null,
-      title: Text(
-        todo.content,
-        style: TextStyle(fontWeight: FontWeight.w600),
-        overflow: TextOverflow.clip,
-        maxLines: 1,
-        softWrap: false,
-      ),
-      subtitle: Text(
-        todo.content.split('\n').sublist(1).join('\n'),
-        overflow: TextOverflow.clip,
-        maxLines: 2,
-        softWrap: false,
+    return Card(
+      child: ListTile(
+        leading: todo.images.length > 0
+            ? CircleAvatar(
+                backgroundImage: todo.images[0],
+                foregroundColor: Colors.white,
+              )
+            : null,
+        title: Text(
+          todo.content,
+          style: TextStyle(fontWeight: FontWeight.w600),
+          overflow: TextOverflow.clip,
+          maxLines: 1,
+          softWrap: false,
+        ),
+        subtitle: Text(
+          todo.content.split('\n').sublist(1).join('\n'),
+          overflow: TextOverflow.clip,
+          maxLines: 2,
+          softWrap: false,
+        ),
+        trailing: todo.dateTime != null ? Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          Text(formatDateTime(todo.dateTime)),
+          Text(formatDateTimeDiff(DateTime.now(), todo.dateTime))
+        ]) : null,
       ),
     );
   }

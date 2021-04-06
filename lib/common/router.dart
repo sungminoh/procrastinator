@@ -8,6 +8,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case Routes.ADD_TODO_ROUTE:
       return MaterialPageRoute(builder: (context) => TodoEditView());
+    case Routes.EDIT_TODO_ROUTE:
+      return MaterialPageRoute(builder: (context) => TodoEditView(settings.arguments));
     case Routes.HOME_ROUTE:
     default:
       return MaterialPageRoute(builder: (context) => TodoListView());

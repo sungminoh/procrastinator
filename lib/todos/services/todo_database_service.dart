@@ -10,7 +10,6 @@ import 'package:sqflite/sqflite.dart';
 const String TODO_DB = 'todo_database.db';
 const String TODO_TABLE = 'todos';
 
-@singleton
 class TodoDatabaseService {
   final _initDBMemoizer = AsyncMemoizer<Database>();
   Future<Database> _database;
@@ -82,23 +81,27 @@ class TodoDatabaseService {
         .then((results) => results.map(toTodo).toList());
   }
 
-  Future<void> addTodo(Todo todo) async {
-    database
+  Future<Todo> addTodo(Todo todo) async {
+    return database
         .then((db) => db.insert(TODO_TABLE, toDict(todo)))
-        .then((value) => todo.id = value)
+        .then((value) {
+          todo.id = value;
+          return todo;
+        })
         .onError((error, stackTrace) {
       logger.e('Fail to insert $todo', error, stackTrace);
-      return error;
+      return null;
     });
   }
 
-  Future<void> updateTodo(Todo todo) async {
-    database
+  Future<Todo> updateTodo(Todo todo) async {
+    return database
         .then(
             (db) => db.update(TODO_TABLE, toDict(todo), where: 'id=${todo.id}'))
+        .then((value) => todo)
         .onError((error, stackTrace) {
       logger.e('Fail to update $todo', error, stackTrace);
-      return error;
+      return todo;
     });
   }
 

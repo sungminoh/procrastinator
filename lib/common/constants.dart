@@ -12,4 +12,5 @@ class Constants {
 class Routes {
   static const String HOME_ROUTE = "/home";
   static const String ADD_TODO_ROUTE = "/add_todo";
+  static const String EDIT_TODO_ROUTE = "/edit_todo";
 }

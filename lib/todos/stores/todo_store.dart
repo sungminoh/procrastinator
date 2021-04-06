@@ -18,7 +18,7 @@ class Todo extends _ObservableTodo {
     todo.id = json['id'];
     todo.content = json['content'];
     todo.imagePaths.addAll(json['imagePaths'].cast<String>());
-    todo.dateTime = DateTime.parse(json['dateTime']);
+    todo.dateTime = json['dateTime'] != null ? DateTime.parse(json['dateTime']) : null;
     todo.timeZone = json['timeZone'];
     todo.interval = json['interval'];
     todo.snooze = json['snooze'];
@@ -30,7 +30,7 @@ class Todo extends _ObservableTodo {
       'id': id,
       'content': content,
       'imagePaths': List<String>.of(this.imagePaths),
-      'dateTime': dateTime.toIso8601String(),
+      'dateTime': dateTime?.toIso8601String(),
       'timeZone': timeZone,
       'interval': interval,
       'snooze': snooze,
@@ -83,5 +83,5 @@ abstract class _Todo with Store {
   }
 
   @computed
-  bool get isEmpty => content.isNullOrEmpty && imagePaths.length == 0;
+  bool get isEmpty => content.isNullOrEmpty && imagePaths.length == 0 && dateTime == null;
 }

@@ -8,7 +8,6 @@ import 'package:my_app/todos/stores/todo_store.dart';
 
 part 'todo_list_store.g.dart';
 
-@lazySingleton
 class TodoList = _TodoList with _$TodoList;
 
 abstract class _TodoList with Store {
@@ -32,13 +31,16 @@ abstract class _TodoList with Store {
   }
 
   @action
-  void update(Todo todo) {
+  Future<Todo> update(Todo todo) async {
+    Future<Todo> ret;
     if (this.todos.where((element) => element.id == todo.id).isEmpty) {
-      getIt<TodoDatabaseService>().addTodo(todo);
+      ret = getIt<TodoDatabaseService>().addTodo(todo);
     } else {
-      getIt<TodoDatabaseService>().updateTodo(todo);
+      ret = getIt<TodoDatabaseService>().updateTodo(todo);
     }
+    await ret;
     load();
+    return ret;
   }
 
   // @action

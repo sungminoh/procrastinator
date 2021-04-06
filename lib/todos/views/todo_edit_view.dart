@@ -9,8 +9,10 @@ import 'package:my_app/common/compoments/text_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:my_app/common/compoments/floatting_modal.dart';
+import 'package:my_app/common/constants.dart';
 import 'package:my_app/common/local_notification.dart';
 import 'package:my_app/common/locator.dart';
+import 'package:my_app/common/navigation.dart';
 import 'package:my_app/common/utils.dart';
 import 'package:my_app/common/dart_api.dart';
 import 'package:my_app/todos/components/scheduler.dart';
@@ -18,6 +20,7 @@ import 'package:my_app/todos/stores/todo_list_store.dart';
 import 'package:my_app/todos/stores/todo_store.dart';
 
 import '../../common/compoments/image_slider.dart';
+import '../../main.dart';
 
 /**
  * todo_edit_view
@@ -44,7 +47,17 @@ class _TodoEditViewState extends State<TodoEditView> {
   @override
   void dispose() {
     if (!widget.todo.isEmpty) {
-      getIt<TodoList>().update(widget.todo);
+      getIt<TodoList>().update(widget.todo).then((todo) {
+        if (todo.dateTime != null) {
+          getIt<TodoNotification>().requestIosPermission();
+          getIt<TodoNotification>().scheduleNotification(
+              id: todo.id,
+              title: Constants.APP_TITLE,
+              body: todo.content,
+              at: todo.dateTime,
+              payload: todo.id.toString());
+        }
+      });
     }
     this.textController.dispose();
     super.dispose();
@@ -97,7 +110,9 @@ class _TodoEditViewState extends State<TodoEditView> {
                 size: 15,
               ),
             ),
-            onTap: () { widget.todo.dateTime = null; },
+            onTap: () {
+              widget.todo.dateTime = null;
+            },
           ),
         ],
       ),
